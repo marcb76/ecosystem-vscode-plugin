@@ -202,13 +202,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
 			'payara.server.app.deploy',
-			uri => payaraServerInstanceController.deployApp(vscode.Uri.parse(uri), false)
+			uri => payaraServerInstanceController.deployApp(parseURI(uri, 'deploy'), false)
 		)
 	);
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
 			'payara.server.app.debug',
-			uri => payaraServerInstanceController.deployApp(vscode.Uri.parse(uri), true)
+			uri => payaraServerInstanceController.deployApp(parseURI(uri, 'debug'), true)
 		)
 	);
 	context.subscriptions.push(
@@ -376,6 +376,34 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 			}
 		}
 
+	}
+
+	function parseURI(uriAsString : any, command : string) : Uri {
+		let uri : Uri = undefined;
+		try {
+			uri = vscode.Uri.parse(uriAsString, true);
+			return uri;
+		} catch (e) {
+			let eMessage = undefined;
+			eMessage = "Unable to parse URI: ";
+			eMessage+= (e instanceof Error) ? (<Error>e).message : String(e);
+			eMessage+= ".";
+			try {
+				let filePath : string;
+				filePath = uriAsString._nodeData.uri;
+				filePath = filePath.substring("file:/".length);
+				uri = vscode.Uri.file(filePath);
+				return uri;
+			} catch (ee) {
+				let eeMessage = "Unable to create URI from file path: ";
+				eeMessage+= (ee instanceof Error) ? (<Error>ee).message : String(ee);
+				eeMessage+= ".";
+				vscode.window.showWarningMessage(eMessage);
+				vscode.window.showWarningMessage(eeMessage);	
+				vscode.window.showErrorMessage("Unable to aquire URI from environment. " + command + " command cancelled.");
+				throw e;
+			}
+		}
 	}
 
 }
