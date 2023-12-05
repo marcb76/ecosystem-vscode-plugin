@@ -879,12 +879,18 @@ export class PayaraServerInstanceController extends PayaraInstanceController {
         } else if (servers.length === 1) {
             callback(servers[0]);
         } else {
-            vscode.window.showQuickPick(servers, {
+            let payaraServers: string[] = [];
+            let payaraServersMap: Map<string, PayaraServerInstance> = new Map<string, PayaraServerInstance>();
+            for (let payaraServer of servers) {
+                payaraServers.push(payaraServer.getDomainName());
+                payaraServersMap.set(payaraServer.getDomainName(), payaraServer);
+            }
+            vscode.window.showQuickPick(payaraServers, {
                 placeHolder: 'Select the Payara Server',
                 canPickMany: false
             }).then(value => {
-                if (value instanceof PayaraServerInstance) {
-                    callback(value);
+                if (payaraServersMap.has(value)) {
+                    callback(payaraServersMap.get(value));
                 } else {
                     vscode.window.showErrorMessage('Please select the Payara Server.');
                 }
