@@ -1,9 +1,9 @@
 {
-	"name": "payara-vscode",
-	"displayName": "Payara Tools",
+	"name": "payara-vscode-marcb76",
+	"displayName": "Payara Tools (MarcB76)",
 	"description": "Payara Tools for Visual Studio Code",
 	"version": "1.3.0-marcb76-1.0",
-	"publisher": "Payara",
+	"publisher": "Marc Bonet",
 	"icon": "resources/payara.png",
 	"repository": {
 		"type": "git",
@@ -15,7 +15,10 @@
 		"MicroProfile",
 		"Payara",
 		"Payara Server",
-		"Payara Micro"
+		"Payara Micro",
+		"Marc",
+		"Bonet",
+		"MarcB76"
 	],
 	"engines": {
 		"vscode": "^1.22.0"
